@@ -1,0 +1,81 @@
+/* #1c1c1c #00e0c6 #f4f4f4 #475569 #0077b6 #ffb347 #e8e8e8 */
+
+nav {
+    background-color: #00e0c6;
+}
+
+.nav-link:active,
+.nav-link:hover {
+    color: #ffa500;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.4rem;
+    margin: 0 15px;
+    transition: 0.3s ease-in-out;
+}
+
+.nav-item a:hover {
+    color: #ffa500;
+    transition: 0.3s ease-in-out;
+}
+
+.nav-item .active {
+    color: #ffa500;
+}
+
+main {
+    background-color: #e8e8e8;
+}
+
+/* Hero Section */
+.hero,
+.carousel-item {
+    height: calc(100vh - 76px);
+}
+
+.carousel-item {
+    position: relative;
+    display: none;
+    float: left;
+    width: 100%;
+    margin-right: -100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transition: transform .8s ease-in-out;
+}
+
+.hero-overlay h1 {
+    color: #ffa500;
+}
+
+.carousel-item img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.ms-btn {
+    width: 30%;
+    margin: 0 15px;
+}
+
+@media (max-width: 768px) {
+    .ms-btn {
+        width: 80%;
+        margin: 0;
+    }
+}
+
+@media (max-width: 425px) {
+    .d-custom-none {
+        display: none !important;
+    }
+}
+
+@media (min-width: 426px) {
+    .d-custom-none {
+        display: block !important;
+    }
+}
