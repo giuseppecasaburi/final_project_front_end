@@ -27,6 +27,31 @@ footer {
     color: #ffa500;
 }
 
+footer {
+    min-height: 200px;
+    padding: 10px 0;
+}
+
+#footer-div {
+    width: 90%;
+    margin: 20px auto;
+    border-top: 2px solid #ffa500;
+}
+
+#footer-div div {
+    width: calc(100% / 3);
+}
+
+@media (max-width: 576px) {
+    #footer-div div {
+    width: 100%;
+}
+}
+
+#footer-div li {
+    list-style: none;
+}
+
 body {
     background-color: #e8e8e8;
 }
@@ -96,8 +121,4 @@ body {
 .form-control:focus {
     border-color: #ffa500;
     box-shadow: 0 0 0 .25rem #ffa500;
-}
-
-.card {
-    background-color: ;
 }
