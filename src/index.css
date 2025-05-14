@@ -1,6 +1,7 @@
 /* #1c1c1c #00e0c6 #f4f4f4 #475569 #0077b6 #ffb347 #e8e8e8 */
-
-nav {
+/* Nav e Footer */
+nav,
+footer {
     background-color: #00e0c6;
 }
 
@@ -26,7 +27,7 @@ nav {
     color: #ffa500;
 }
 
-main {
+body {
     background-color: #e8e8e8;
 }
 
@@ -78,4 +79,25 @@ main {
     .d-custom-none {
         display: block !important;
     }
+}
+
+/* Search Section & Recent Section */
+#search-section,
+#recent-section {
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+}
+
+.form-control {
+    border: var(--bs-border-width) solid #ffa500;
+}
+
+.form-control:focus {
+    border-color: #ffa500;
+    box-shadow: 0 0 0 .25rem #ffa500;
+}
+
+.card {
+    background-color: ;
 }

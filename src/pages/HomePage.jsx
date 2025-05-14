@@ -17,21 +17,24 @@ function HomePage() {
         })
     }
 
-    console.log(movies)
+    // Filtra tutti i film e restituisce gli ultimi tre aggiunti
+    const recentMovies = movies.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
+
+    console.log(recentMovies)
 
     return (
         <main>
             <div className="hero position-relative text-white text-center">
-                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="/img/hero_harry_p.jpg" class="d-block w-100" alt="/img/hero_harry_p" />
+                <div id="carouselExampleSlidesOnly" className="carousel slide" data-bs-ride="carousel">
+                    <div className="carousel-inner">
+                        <div className="carousel-item active">
+                            <img src="/img/hero_harry_p.jpg" className="d-block w-100" alt="/img/hero_harry_p" />
                         </div>
-                        <div class="carousel-item">
-                            <img src="/img/hero_odissea.jpg" class="d-block w-100" alt="/img/hero_harry_p" />
+                        <div className="carousel-item">
+                            <img src="/img/hero_odissea.jpg" className="d-block w-100" alt="/img/hero_harry_p" />
                         </div>
-                        <div class="carousel-item">
-                            <img src="/img/hero_turman.jpg" class="d-block w-100" alt="/img/hero_harry_p" />
+                        <div className="carousel-item">
+                            <img src="/img/hero_turman.jpg" className="d-block w-100" alt="/img/hero_harry_p" />
                         </div>
                     </div>
 
@@ -54,15 +57,38 @@ function HomePage() {
                 </div>
             </div>
 
+            <section id="search-section">
+                <div className="search-section">
+                    <h3 className="text-center my-4">Cerca per nome del Film o per nome o cognome del Regista</h3>
+                    <form className="d-flex" role="search">
+                        <input className="form-control me-2" type="search" placeholder="Film o Regista" aria-label="Search" />
+                        <button className="btn btn-outline-warning" type="submit">Cerca</button>
+                    </form>
+                </div>
+            </section>
 
+            <section id="recent-section">
+                <h3 className="text-center my-4">Gli ultimi 3 Film caricati</h3>
+                <div className="row g-4">
+                    {recentMovies.map((movie, index) => (
+                        <div key={index} className="col-12 col-md-4">
+                            <div className="card h-100 d-flex flex-column">
+                                {movie.image != null ? (
+                                    <img src={`http://localhost:8000/storage/${movie.image}`} className="card-img-top" alt="..." style={{objectFit: "cover", height: "200px"}}/>
 
-
-            {/* <h1 class="home">Home</h1>
-            <ul>
-                {movies.map((movie) => (
-                    <li>{movie.title}</li>
-                ))}
-            </ul> */}
+                                ) : (
+                                    <div className="d-flex justify-content-center align-items-center" style={{objectFit: "cover", height: "200px"}}>Nessuna Immagine Collegata</div>
+                                )}
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title">{movie.title}</h5>
+                                    <p className="card-text">{movie.story}</p>
+                                    <a href="#" className="btn btn-outline-warning">Visualizza Film</a>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </main>
     )
 }
