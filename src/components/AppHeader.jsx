@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function AppHeader() {
     const navLinks = [
@@ -17,6 +18,10 @@ function AppHeader() {
             title: "Registi",
         },
     ];
+
+    // Stato per la ricerca
+    const [search, setSearch] = useState("")
+    const navigate = useNavigate()
 
     return (
         <>
@@ -39,8 +44,13 @@ function AppHeader() {
 
 
                             </ul>
-                            <form className="d-flex" role="search">
-                                <input className="form-control me-2" type="search" placeholder="Film o Regista" aria-label="Search" />
+                            <form className="d-flex" role="search" onSubmit={(e) => {
+                                e.preventDefault();
+                                if (search.trim() === "") return;
+
+                                navigate(`/search?query_search=${encodeURIComponent(search)}`)
+                            }}>
+                                <input className="form-control me-2" type="search" placeholder="Film o Regista" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
                                 <button className="btn btn-outline-secondary" type="submit">Cerca</button>
                             </form>
                         </div>
