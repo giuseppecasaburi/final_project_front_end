@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 function AppHeader() {
     const navLinks = [
         {
-            path: "",
+            path: "/",
             title: "HomePage",
         },
 
@@ -36,8 +36,8 @@ function AppHeader() {
                         </button>
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                {navLinks.map((link) => (
-                                    <li className="nav-item">
+                                {navLinks.map((link, index) => (
+                                    <li key={index} className="nav-item">
                                         <NavLink className={({ isActive }) => isActive ? "nav-link active text-warning" : "nav-link"} to={link.path} aria-current="page">{link.title}</NavLink>
                                     </li>
                                 ))}

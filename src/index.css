@@ -28,7 +28,6 @@ footer {
 }
 
 footer {
-    min-height: 200px;
     padding: 10px 0;
 }
 
@@ -121,4 +120,13 @@ body {
 .form-control:focus {
     border-color: #ffa500;
     box-shadow: 0 0 0 .25rem #ffa500;
+}
+
+/* SearchPage */
+.filter {
+    background-color: #00e0c6;
+}
+
+.content {
+    width: 80%;
 }

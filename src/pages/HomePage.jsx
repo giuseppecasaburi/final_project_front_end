@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import CardMovie from "../components/CardMovie";
 
 function HomePage() {
     const [movies, setMovies] = useState([])
@@ -72,19 +73,7 @@ function HomePage() {
                 <div className="row g-4">
                     {recentMovies.map((movie, index) => (
                         <div key={index} className="col-12 col-md-4">
-                            <div className="card h-100 d-flex flex-column">
-                                {movie.image != null ? (
-                                    <img src={`http://localhost:8000/storage/${movie.image}`} className="card-img-top" alt="..." style={{objectFit: "cover", height: "200px"}}/>
-
-                                ) : (
-                                    <div className="d-flex justify-content-center align-items-center" style={{objectFit: "cover", height: "200px"}}>Nessuna Immagine Collegata</div>
-                                )}
-                                <div className="card-body d-flex flex-column">
-                                    <h5 className="card-title">{movie.title}</h5>
-                                    <p className="card-text">{movie.story}</p>
-                                    <a href="#" className="btn btn-outline-warning">Visualizza Film</a>
-                                </div>
-                            </div>
+                            <CardMovie movie={movie} index={index}/>
                         </div>
                     ))}
                 </div>

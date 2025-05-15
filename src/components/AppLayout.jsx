@@ -5,11 +5,13 @@ import AppFooter from "./AppFooter"
 function AppLayout() {
     return (
         <>
-        <AppHeader/>
-        <Outlet/>
-        <AppFooter/>
+            <div className="wrapper d-flex flex-column min-vh-100">
+                <AppHeader />
+                <Outlet />
+                <AppFooter />
+            </div>
         </>
-    ) 
+    )
 }
 
 export default AppLayout

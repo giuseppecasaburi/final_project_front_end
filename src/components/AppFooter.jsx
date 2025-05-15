@@ -20,7 +20,7 @@ function AppFooter() {
 
 
     return (
-        <footer>
+        <footer className="mt-auto">
             <div
                 id="footer-div"
                 className="container d-flex flex-column flex-sm-row flex-wrap justify-content-between align-items-center text-center"
