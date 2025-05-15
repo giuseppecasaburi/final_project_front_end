@@ -1,173 +1,209 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import CardMovie from "./CardMovie";
 import CardDirector from "./CardDirector";
 import CustomSelect from "./CustomSelect";
 import CustomSelectDirector from "./CustomSelectDirector";
 
 function SearchPage() {
-    const [searchParams] = useSearchParams();
-    const query = searchParams.get("query_search");
+    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    // Params iniziali da URL
+    const initialQuery = searchParams.get("query_search") || "";
+    const initialGenres = searchParams.get("genres")
+        ? searchParams.get("genres").split(",").map(id => parseInt(id, 10))
+        : [];
+    const initialDirectors = searchParams.get("directors")
+        ? searchParams.get("directors").split(",").map(id => parseInt(id, 10))
+        : [];
+
+    // Stati
+    const [query, setQuery] = useState("");
     const [resultsMovies, setResultsMovies] = useState([]);
     const [resultsDirectors, setResultsDirectors] = useState([]);
     const [genres, setGenres] = useState([]);
     const [directors, setDirectors] = useState([]);
-    const [selectedGenres, setSelectedGenres] = useState([]);
-    const [selectedDirectors, setSelectedDirectors] = useState([]);
+    const [selectedGenres, setSelectedGenres] = useState(initialGenres);
+    const [selectedDirectors, setSelectedDirectors] = useState(initialDirectors);
 
+    // Carica generi e registi
     useEffect(() => {
-        const genres = axios.get("http://localhost:8000/api/genres").then((resp) => {
-            setGenres(resp.data.data);
-        })
+        axios.get("http://localhost:8000/api/genres").then(r => setGenres(r.data.data));
+        axios.get("http://localhost:8000/api/directors").then(r => setDirectors(r.data.data));
+    }, []);
 
-        const directors = axios.get("http://localhost:8000/api/directors").then((resp) => {
-            setDirectors(resp.data.data);
-        })
-    }, [])
+    // Funzione per chiamare l'API search con params correnti
+    const fetchSearch = async (params) => {
+        const resp = await axios.get("http://localhost:8000/api/search", { params });
+        setResultsMovies(resp.data.movies);
+        setResultsDirectors(resp.data.directors);
+    };
 
+    // Al mount e ogni volta che cambiano query/searchParams, esegue la ricerca iniziale
     useEffect(() => {
-        if (query) {
-            axios.get("http://localhost:8000/api/search", {
-                params: {
-                    query_search: query,
-                },
-            }).then((resp) => {
-                console.log(resp.data.movies, resp.data.directors)
-                setResultsMovies(resp.data.movies);
-                setResultsDirectors(resp.data.directors);
-            })
+        if (!query && selectedGenres.length === 0 && selectedDirectors.length === 0) {
+            setResultsMovies([]);
+            setResultsDirectors([]);
+            return;
         }
-    }, [query])
+        fetchSearch({
+            query_search: query,
+            genres: selectedGenres.length ? selectedGenres : undefined,
+            directors: selectedDirectors.length ? selectedDirectors : undefined
+        });
+    }, [query, selectedGenres, selectedDirectors]);
 
-    const handleFilterSubmit = async e => {
+    useEffect(() => {
+        const params = new URLSearchParams();
+        if (query) params.set("query_search", query);
+        if (selectedGenres.length) params.set("genres", selectedGenres.join(","));
+        if (selectedDirectors.length) params.set("directors", selectedDirectors.join(","));
+        setSearchParams(params, { replace: true });
+    }, [query, selectedGenres, selectedDirectors, setSearchParams]);
+
+    useEffect(() => {
+        const newQuery = searchParams.get("query_search") || "";
+        setQuery(newQuery);
+    }, [searchParams]);
+
+    // Submit del form: aggiorna URL e stato
+    const handleFilterSubmit = e => {
         e.preventDefault();
-        try {
-            const resp = await axios.get("http://localhost:8000/api/search", {
-                params: {
-                    query_search: query,
-                    genres: selectedGenres,       // array di id
-                    directors: selectedDirectors, // array di id
-                },
-            });
-            setResultsMovies(resp.data.movies);
-            setResultsDirectors(resp.data.directors);
-        } catch (err) {
-            console.error(err);
-        }
+        const params = new URLSearchParams();
+        if (query) params.set("query_search", query);
+        if (selectedGenres.length) params.set("genres", selectedGenres.join(","));
+        if (selectedDirectors.length) params.set("directors", selectedDirectors.join(","));
+        navigate(`/search?${params.toString()}`, { replace: true });
+        // fetchSearch verrà richiamato automaticamente dal useEffect sopra
     };
 
-    const handleGenreChange = (selectedGenres) => {
-        // Gestisci i generi selezionati
-        setSelectedGenres(selectedGenres.map(genre => genre.value));
-        console.log(selectedGenres);
-
+    // Rimuovi tutti i filtri
+    const handleClearFilters = () => {
+        setSelectedGenres([]);
+        setSelectedDirectors([]);
+        navigate(`/search?query_search=${encodeURIComponent(query)}`, { replace: true });
     };
 
-    const handleDirectorChange = (selectedDirectors) => {
-        // Gestisci i registi selezionati
-        setSelectedDirectors(selectedDirectors.map(director => director.value));
-        console.log(selectedDirectors);
+    // Handlers per checkbox e custom select
+    const handleGenreCheckbox = e => {
+        const id = parseInt(e.target.value, 10);
+        setSelectedGenres(prev =>
+            e.target.checked ? [...prev, id] : prev.filter(g => g !== id)
+        );
+    };
+    const handleDirectorCheckbox = e => {
+        const id = parseInt(e.target.value, 10);
+        setSelectedDirectors(prev =>
+            e.target.checked ? [...prev, id] : prev.filter(d => d !== id)
+        );
+    };
+    const handleGenreChange = opts => {
+        setSelectedGenres(opts ? opts.map(o => o.value) : []);
+    };
+    const handleDirectorChange = opts => {
+        setSelectedDirectors(opts ? opts.map(o => o.value) : []);
     };
 
     return (
         <div className="d-sm-flex d-block">
-            <div className="filter d-block d-sm-flex flex-column p-3">
+            <aside className="filter d-block d-sm-flex flex-column p-3">
                 <form onSubmit={handleFilterSubmit}>
-                    <input type="hidden" />
                     <h3>Aggiungi Filtri</h3>
-                    <h5 className="d-block">Filtra per Genere</h5>
+
+                    <h5>Filtra per Genere</h5>
                     <div className="p-2">
-                        {genres.map((genre, index) => (
-                            <>
-                                <span className="d-none d-sm-block pb-2 px-2" key={`genre-${index}`}>
-                                    <input
-                                        type="checkbox"
-                                        id={`genre-${genre.id}`}
-                                        name="genres"
-                                        value={genre.id}
-                                        checked={selectedGenres.includes(genre.id)}
-                                        onChange={e => {
-                                            const id = genre.id;
-                                            setSelectedGenres(prev =>
-                                                e.target.checked ? [...prev, id] : prev.filter(g => g !== id)
-                                            );
-                                        }}
-                                    />
-                                    <label htmlFor={`genre-${genre.id}`} className="ps-2">{genre.name}</label>
-                                </span>
-                            </>
+                        {genres.map(g => (
+                            <label
+                                key={g.id}
+                                className="d-none d-sm-block me-3"
+                            >
+                                <input
+                                    type="checkbox"
+                                    value={g.id}
+                                    checked={selectedGenres.includes(g.id)}
+                                    onChange={handleGenreCheckbox}
+                                />
+                                <span className="ps-2">{g.name}</span>
+                            </label>
                         ))}
-                        <div className="d-block d-sm-none">
+                        <div className="d-block d-sm-none mb-3">
                             <CustomSelect
                                 optionsData={genres}
                                 placeholder="Filtra per Genere"
                                 onChange={handleGenreChange}
+                                value={genres
+                                    .filter((g) => selectedGenres.includes(g.id))
+                                    .map((g) => ({ value: g.id, label: g.name }))}
                             />
                         </div>
                     </div>
 
-                    <h5 className="d-block">Filtra per Regista</h5>
+                    <h5>Filtra per Regista</h5>
                     <div className="p-2">
-                        {directors.map((director, index) => (
-                            <>
-                                <span className="d-none d-sm-block pb-2 px-2" key={`director-${index}`}>
-                                    <input
-                                        type="checkbox"
-                                        id={`director-${director.id}`}
-                                        name="directors"
-                                        value={director.id}
-                                        checked={selectedDirectors.includes(director.id)}
-                                        onChange={e => {
-                                            const id = director.id;
-                                            setSelectedDirectors(prev =>
-                                                e.target.checked ? [...prev, id] : prev.filter(d => d !== id)
-                                            );
-                                        }}
-                                    />
-                                    <label htmlFor={`director-${director.id}`} className="ps-2 wrap">{director.name} {director.surname}</label>
-                                </span>
-                            </>
+                        {directors.map(d => (
+                            <label
+                                key={d.id}
+                                className="d-none d-sm-block me-3"
+                            >
+                                <input
+                                    type="checkbox"
+                                    value={d.id}
+                                    checked={selectedDirectors.includes(d.id)}
+                                    onChange={handleDirectorCheckbox}
+                                />
+                                <span className="ps-2">{d.name} {d.surname}</span>
+                            </label>
                         ))}
-                        <div className="d-block d-sm-none">
+                        <div className="d-block d-sm-none mb-3">
                             <CustomSelectDirector
                                 optionsData={directors}
                                 placeholder="Filtra per Regista"
                                 onChange={handleDirectorChange}
+                                value={directors
+                                    .filter((d) => selectedDirectors.includes(d.id))
+                                    .map((d) => ({ value: d.id, label: `${d.name} ${d.surname}` }))}
                             />
                         </div>
                     </div>
-                    <button className="btn btn-warning mt-3 me-1">Filtra</button>
-                    <button className="btn btn-secondary mt-3 me-1">Rimuovi Filtri</button>
+
+                    <button type="submit" className="btn btn-warning mt-3 me-1">
+                        Filtra
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-secondary mt-3"
+                        onClick={handleClearFilters}
+                    >
+                        Rimuovi Filtri
+                    </button>
                 </form>
-            </div>
-            <div className="content p-3">
-                <h2>Risultati per: "{query}"</h2>
+            </aside>
+
+            <main className="content p-3">
+                <h2>{[...resultsMovies, ...resultsDirectors].length} risultati per: "{query}"</h2>
                 <div className="row">
-                    {[...resultsMovies, ...resultsDirectors].length > 0 ? (
+                    {resultsMovies.length + resultsDirectors.length > 0 ? (
                         <>
-                            {resultsMovies.length > 0 &&
-                                resultsMovies.map((movie, index) => (
-                                    <div className="col-md-4 mb-3" key={`movie-${index}`}>
-                                        <CardMovie movie={movie} index={index} />
-                                    </div>
-                                ))
-                            }
-                            {resultsDirectors.length > 0 &&
-                                resultsDirectors.map((director, index) => (
-                                    <div className="col-md-4 mb-3" key={`director-${index}`}>
-                                        <CardDirector director={director} index={index} />
-                                    </div>
-                                ))
-                            }
+                            {resultsMovies.map((m, i) => (
+                                <div className="col-md-4 mb-3" key={`movie-${i}`}>
+                                    <CardMovie movie={m} index={i} />
+                                </div>
+                            ))}
+                            {resultsDirectors.map((d, i) => (
+                                <div className="col-md-4 mb-3" key={`director-${i}`}>
+                                    <CardDirector director={d} index={i} />
+                                </div>
+                            ))}
                         </>
                     ) : (
                         <p>Nessun risultato trovato.</p>
                     )}
                 </div>
-            </div>
+            </main>
         </div>
     );
 }
 
-export default SearchPage
+export default SearchPage;

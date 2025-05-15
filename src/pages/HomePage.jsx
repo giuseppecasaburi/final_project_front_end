@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CardMovie from "../components/CardMovie";
 
 function HomePage() {
@@ -20,6 +20,10 @@ function HomePage() {
 
     // Filtra tutti i film e restituisce gli ultimi tre aggiunti
     const recentMovies = movies.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
+
+    // Stato per la ricerca
+    const [search, setSearch] = useState("")
+    const navigate = useNavigate()
 
     console.log(recentMovies)
 
@@ -61,8 +65,13 @@ function HomePage() {
             <section id="search-section">
                 <div className="search-section">
                     <h3 className="text-center my-4">Cerca per nome del Film o per nome o cognome del Regista</h3>
-                    <form className="d-flex" role="search">
-                        <input className="form-control me-2" type="search" placeholder="Film o Regista" aria-label="Search" />
+                    <form className="d-flex" role="search" onSubmit={(e) => {
+                        e.preventDefault();
+                        if (search.trim() === "") return;
+
+                        navigate(`/search?query_search=${encodeURIComponent(search)}`)
+                    }}>
+                        <input className="form-control me-2" type="search" placeholder="Film o Regista" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)}/>
                         <button className="btn btn-outline-warning" type="submit">Cerca</button>
                     </form>
                 </div>
@@ -73,7 +82,7 @@ function HomePage() {
                 <div className="row g-4">
                     {recentMovies.map((movie, index) => (
                         <div key={index} className="col-12 col-md-4">
-                            <CardMovie movie={movie} index={index}/>
+                            <CardMovie movie={movie} index={index} />
                         </div>
                     ))}
                 </div>

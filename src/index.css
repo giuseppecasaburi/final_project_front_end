@@ -43,8 +43,8 @@ footer {
 
 @media (max-width: 576px) {
     #footer-div div {
-    width: 100%;
-}
+        width: 100%;
+    }
 }
 
 #footer-div li {
@@ -129,4 +129,11 @@ body {
 
 .content {
     width: 80%;
+}
+
+@media (max-width: 576px) {
+    .content {
+        width: 90%;
+        margin: auto;
+    }
 }
