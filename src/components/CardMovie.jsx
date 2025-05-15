@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 
 function CardMovie({ movie, index }) {
     return (
-        <div className="card h-100 d-flex flex-column">
+        <div key={index} className="card h-100 d-flex flex-column">
             {movie.image != null ? (
                 <img src={`http://localhost:8000/storage/${movie.image}`} className="card-img-top" alt={`Copertina del Film ${movie.title}`} style={{ objectFit: "cover", objectPosition: "top", height: "200px" }} />
 

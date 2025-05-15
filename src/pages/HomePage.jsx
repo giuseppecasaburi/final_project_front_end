@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CardMovie from "../components/CardMovie";
 import CardDirector from "../components/CardDirector";
+import Loader from "../components/AppLoader";
 
 function HomePage() {
     const [movies, setMovies] = useState([]);
     const [directors, setDirectors] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     // Stato per la ricerca
     const [search, setSearch] = useState("");
@@ -20,6 +22,7 @@ function HomePage() {
     const getMovies = () => {
         axios.get("http://127.0.0.1:8000/api/movies").then((resp) => {
             setMovies(resp.data.data.data)
+            setLoading(false)
         })
     };
 
@@ -86,27 +89,33 @@ function HomePage() {
                 </div>
             </section>
 
-            <section id="recent-section">
-                <h3 className="text-center my-4">Le Novità del Momento</h3>
-                <div className="row g-4">
-                    {recentMovies.map((movie, index) => (
-                        <div key={index} className="col-12 col-md-4">
-                            <CardMovie movie={movie} index={index} />
+            {loading ? (
+                <Loader />
+            ) : (
+                <>
+                    <section id="recent-section">
+                        <h3 className="text-center my-4">Le Novità del Momento</h3>
+                        <div className="row g-4">
+                            {recentMovies.map((movie, index) => (
+                                <div key={index} className="col-12 col-md-4">
+                                    <CardMovie movie={movie} index={index} />
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </section>
+                    </section>
 
-            <section id="recent-section">
-                <h3 className="text-center my-4">Scopri un Regista</h3>
-                <div className="row g-4">
-                    {directors.map((director, index) => (
-                        <div key={index} className="col-12 col-md-4">
-                            <CardDirector director={director} index={index} />
+                    <section id="recent-section">
+                        <h3 className="text-center my-4">Scopri un Regista</h3>
+                        <div className="row g-4">
+                            {directors.map((director, index) => (
+                                <div key={index} className="col-12 col-md-4">
+                                    <CardDirector director={director} index={index} />
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </section>
+                    </section>
+                </>
+            )}
         </main>
     )
 }

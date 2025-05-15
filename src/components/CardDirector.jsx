@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 
 function CardDirector({director, index}) {
     return (
-        <div className="card h-100 d-flex flex-column">
+        <div key={index} className="card h-100 d-flex flex-column">
             {director.image != null ? (
                 <img src={`http://localhost:8000/storage/${director.image}`} className="card-img-top" alt={`Immagine di ${director.name} ${director.surname}`} style={{ objectFit: "cover", height: "200px" }} />
 
