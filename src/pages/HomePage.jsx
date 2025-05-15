@@ -4,28 +4,36 @@ import { Link, useNavigate } from "react-router-dom";
 import CardMovie from "../components/CardMovie";
 
 function HomePage() {
-    const [movies, setMovies] = useState([])
+    const [movies, setMovies] = useState([]);
+    const [directors, setDirectors] = useState([]);
+
+    // Stato per la ricerca
+    const [search, setSearch] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         getMovies()
-    }, [])
+        getDirectors()
+    }, []);
 
     const getMovies = () => {
         axios.get("http://127.0.0.1:8000/api/movies").then((resp) => {
-            const movies = resp.data.data
-
-            setMovies(movies)
+            setMovies(resp.data.data.data)
         })
-    }
+    };
+
+    const getDirectors = () => {
+        axios.get("http://localhost:8000/api/directors").then((resp) => {
+            const directors = resp.data.data.data;
+            // Mischia casualmente l'array e ne preleva i primi 3 da salvare in directors
+            const shuffled = [...directors].sort(() => 0.5 - Math.random());
+            setDirectors(shuffled.slice(0, 3));
+
+        })
+    };
 
     // Filtra tutti i film e restituisce gli ultimi tre aggiunti
     const recentMovies = movies.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
-
-    // Stato per la ricerca
-    const [search, setSearch] = useState("")
-    const navigate = useNavigate()
-
-    console.log(recentMovies)
 
     return (
         <main>
@@ -57,8 +65,8 @@ function HomePage() {
                     <p className="fs-5 pb-2 d-custom-none">
                         Esplora le migliori pellicole da vedere da solo, con gli amici o in famiglia. Dai grandi classici ai capolavori moderni: lasciati ispirare, emozionare e sorprendere.
                     </p>
-                    <Link to={`/`} className="btn ms-btn btn-outline-warning mt-2">Lista Film</Link>
-                    <Link to={`/`} className="btn ms-btn btn-outline-warning mt-2">Lista Registi</Link>
+                    <Link to={`/movies`} className="btn ms-btn btn-outline-warning mt-2">Lista Film</Link>
+                    <Link to={`/directors`} className="btn ms-btn btn-outline-warning mt-2">Lista Registi</Link>
                 </div>
             </div>
 
@@ -71,18 +79,29 @@ function HomePage() {
 
                         navigate(`/search?query_search=${encodeURIComponent(search)}`)
                     }}>
-                        <input className="form-control me-2" type="search" placeholder="Film o Regista" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)}/>
-                        <button className="btn btn-outline-warning" type="submit">Cerca</button>
+                        <input className="form-control me-2" type="search" placeholder="Film o Regista" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
+                        <button className="btn btn-warning" type="submit">Cerca</button>
                     </form>
                 </div>
             </section>
 
             <section id="recent-section">
-                <h3 className="text-center my-4">Gli ultimi 3 Film caricati</h3>
+                <h3 className="text-center my-4">Le Novità del Momento</h3>
                 <div className="row g-4">
                     {recentMovies.map((movie, index) => (
                         <div key={index} className="col-12 col-md-4">
                             <CardMovie movie={movie} index={index} />
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <section id="recent-section">
+                <h3 className="text-center my-4">Scopri un Regista</h3>
+                <div className="row g-4">
+                    {directors.map((director, index) => (
+                        <div key={index} className="col-12 col-md-4">
+                            <CardMovie movie={director} index={index} />
                         </div>
                     ))}
                 </div>

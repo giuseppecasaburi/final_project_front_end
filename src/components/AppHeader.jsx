@@ -9,12 +9,12 @@ function AppHeader() {
         },
 
         {
-            path: "/a",
+            path: "/movies",
             title: "Films",
         },
 
         {
-            path: "/ss",
+            path: "/directors",
             title: "Registi",
         },
     ];
@@ -51,7 +51,7 @@ function AppHeader() {
                                 navigate(`/search?query_search=${encodeURIComponent(search)}`)
                             }}>
                                 <input className="form-control me-2" type="search" placeholder="Film o Regista" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
-                                <button className="btn btn-outline-secondary" type="submit">Cerca</button>
+                                <button className="btn btn-warning" type="submit">Cerca</button>
                             </form>
                         </div>
                     </div>

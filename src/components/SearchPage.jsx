@@ -31,7 +31,7 @@ function SearchPage() {
     // Carica generi e registi
     useEffect(() => {
         axios.get("http://localhost:8000/api/genres").then(r => setGenres(r.data.data));
-        axios.get("http://localhost:8000/api/directors").then(r => setDirectors(r.data.data));
+        axios.get("http://localhost:8000/api/directors").then(r => setDirectors(r.data.data.data));
     }, []);
 
     // Funzione per chiamare l'API search con params correnti

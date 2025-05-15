@@ -3,17 +3,17 @@ import { NavLink } from "react-router-dom";
 function AppFooter() {
     const navLinks = [
         {
-            path: "",
+            path: "/",
             title: "HomePage",
         },
 
         {
-            path: "/a",
+            path: "/movies",
             title: "Films",
         },
 
         {
-            path: "/ss",
+            path: "/directors",
             title: "Registi",
         },
     ];
