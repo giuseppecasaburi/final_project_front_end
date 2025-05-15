@@ -23,6 +23,19 @@ function MoviePage() {
         window.scrollTo( {top: 0, behavior: "smooth"} )
     }
 
+    const renderStars = (vote) => {
+        const fullStars = Math.ceil(vote);
+        const emptyStars = 5 - fullStars;
+        const stars = [];
+        for (let i = 0; i < fullStars; i++) {
+            stars.push(<i key={`full-${i}`} className="fa-solid text-warning fa-star"></i>);
+        }
+        for (let i = 0; i < emptyStars; i++) {
+            stars.push(<i key={`empty-${i}`} className="fa-regular text-warning fa-star"></i>);
+        }
+        return stars;
+    };
+
     return (
         <div className="container my-3">
             <h2 className="mb-4 d-flex flex-column flex-sm-row align-items-center">Catalogo Films</h2>
@@ -42,7 +55,8 @@ function MoviePage() {
                                 <div className="card-body d-flex flex-column">
                                     <h5 className="card-title">{movie.title}</h5>
                                     <p className="card-text">{movie.year_of_publication}</p>
-                                    <span>Durata: {movie.duration} minuti</span><br />
+                                    <span>Durata: {movie.duration} minuti</span>
+                                    <p className="mb-0">{renderStars(movie.vote)}</p>
                                     {movie.director != null ? (
                                         <p className="card-text">Regista: {movie.director['name']} {movie.director['surname']}</p>
                                     ) : (

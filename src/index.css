@@ -137,3 +137,11 @@ body {
         margin: auto;
     }
 }
+
+/* SingleMovie */
+.body-review {
+    border: 2px solid #ffa500;
+    border-radius: 15px;
+    padding: 5px;
+    min-height: 150px;
+}
