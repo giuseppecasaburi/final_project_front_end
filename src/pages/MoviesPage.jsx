@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom";
 
 function MoviePage() {
     const [movies, setMovies] = useState([]);
@@ -45,7 +46,7 @@ function MoviePage() {
                         <div className="col">
                             <div key={index} className="card h-100 d-flex flex-column">
                                 {movie.image != null ? (
-                                    <img src={`http://localhost:8000/storage/${movie.image}`} className="card-img-top" alt=""
+                                    <img src={`http://localhost:8000/storage/${movie.image}`} className="card-img-top" alt={`Copertina del Film ${movie.title}`}
                                         style={{ objectFit: "cover", objectPosition: "top", height: "300px" }} />
                                 ) : (
                                     <div style={{ border: "2px solid #ffa500", height: "300px", color: "#ffa500" }} className="justify-content-center d-flex align-items-center">Nessuna immagine collegata</div>
@@ -62,9 +63,7 @@ function MoviePage() {
                                     ) : (
                                         <p className="card-text">Nessun regista collegato</p>
                                     )}
-                                    <a href={`/movies/${movie.id}`} className="btn btn-warning mt-auto">Visualizza
-                                        Film
-                                    </a>
+                                    <Link to={`/movies/${movie.id}`} className="btn btn-warning mt-auto">Visualizza Film</Link>
                                 </div>
                             </div>
                         </div>

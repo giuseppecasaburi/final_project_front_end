@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CardMovie from "../components/CardMovie";
+import CardDirector from "../components/CardDirector";
 
 function HomePage() {
     const [movies, setMovies] = useState([]);
@@ -101,7 +102,7 @@ function HomePage() {
                 <div className="row g-4">
                     {directors.map((director, index) => (
                         <div key={index} className="col-12 col-md-4">
-                            <CardMovie movie={director} index={index} />
+                            <CardDirector director={director} index={index} />
                         </div>
                     ))}
                 </div>

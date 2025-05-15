@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom";
 
 function DirectorPage() {
     const [directors, setDirectors] = useState([]);
@@ -32,7 +33,7 @@ function DirectorPage() {
                         <div className="col">
                             <div key={index} className="card h-100 d-flex flex-column">
                                 {director.image != null ? (
-                                    <img src={`http://localhost:8000/storage/${director.image}`} className="card-img-top" alt=""
+                                    <img src={`http://localhost:8000/storage/${director.image}`} className="card-img-top" alt={`Immagine di ${director.name} ${director.surname}`}
                                         style={{ objectFit: "cover", objectPosition: "top", height: "300px" }} />
                                 ) : (
                                     <div style={{ border: "2px solid #ffa500", height: "300px", color: "#ffa500" }} className="justify-content-center d-flex align-items-center">Nessuna immagine collegata</div>
@@ -43,9 +44,7 @@ function DirectorPage() {
                                     <h5 className="card-title">{director.name} {director.surname}</h5>
                                     <p className="card-text">Nato il: {director.date_of_birth}</p>
                                     <span>Nazionalità {director.nationality}</span><br />
-                                    <a href={`/directors/${director.id}`} className="btn btn-warning mt-auto">Visualizza
-                                        Film
-                                    </a>
+                                    <Link to={`/directors/${director.id}`} className="btn btn-warning mt-auto">Visualizza Regista</Link>
                                 </div>
                             </div>
                         </div>

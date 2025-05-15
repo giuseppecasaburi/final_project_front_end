@@ -20,7 +20,6 @@ function App() {
             <Route path="/movies/:id" element={<SingleMovie />} />
             <Route path="/directors" element={<DirectorPage />} />
             <Route path="/directors/:id" element={<SingleDirector/>}/>
-
           </Route>
         </Routes>
       </BrowserRouter>

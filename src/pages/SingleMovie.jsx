@@ -46,9 +46,9 @@ function SingleMovie() {
                 {/* BODY */}
                 <div className="body-content d-flex flex-column flex-lg-row">
                     {/* IMMAGINE */}
-                    <div className="image-content w-25 w-lg-100 mb-3 mb-lg-0">
+                    <div className="image-content w-80 mb-3 mb-lg-0">
                         {movie.image != null ? (
-                            <img src={`http://localhost:8000/storage/${movie.image}`} alt="locandina del film" className="img-fluid rounded" />
+                            <img src={`http://localhost:8000/storage/${movie.image}`} alt={`Copertina del Film ${movie.title}`} className="img-fluid h-100 rounded" />
 
                         ) : (
                             <div className="d-flex justify-content-center align-items-center h-100">Nessuna immagine collegata</div>
