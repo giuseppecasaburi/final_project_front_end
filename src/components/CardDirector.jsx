@@ -4,10 +4,10 @@ function CardDirector({director, index}) {
     return (
         <div key={index} className="card h-100 d-flex flex-column">
             {director.image != null ? (
-                <img src={`http://localhost:8000/storage/${director.image}`} className="card-img-top" alt={`Immagine di ${director.name} ${director.surname}`} style={{ objectFit: "cover", height: "200px" }} />
+                <img src={`http://localhost:8000/storage/${director.image}`} className="card-img-top" alt={`Immagine di ${director.name} ${director.surname}`} style={{ objectFit: "cover", height: "350px" }} />
 
             ) : (
-                <div className="d-flex justify-content-center align-items-center" style={{ objectFit: "cover", height: "200px" }}>Nessuna Immagine Collegata</div>
+                <div className="d-flex justify-content-center align-items-center" style={{ objectFit: "cover", height: "350px" }}>Nessuna Immagine Collegata</div>
             )}
             <div key={index} className="card-body d-flex flex-column">
                 <h5 className="card-title">{director.name} {director.surname}</h5>

@@ -55,6 +55,15 @@ footer,
     border-color: #f37c31;
 }
 
+.btn-outline-warning {
+    border-color: #f37c31;
+}
+
+.btn-outline-warning:hover {
+    background-color: #f37c31;
+    border-color: #f37c31;
+}
+
 footer {
     padding: 10px 0;
 }
@@ -90,23 +99,18 @@ body {
 }
 
 .carousel-item {
-    position: relative;
-    display: none;
-    float: left;
-    width: 100%;
-    margin-right: -100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    transition: transform .8s ease-in-out;
-}
-
-.hero-overlay h1 {
-    color: #ffa500;
+    background-color: black; /* o transparent */
 }
 
 .carousel-item img {
-    height: 100%;
+    height: 100vh; /* o un'altezza coerente */
     object-fit: cover;
+    display: block;
+    width: 100%;
+}
+
+.hero-overlay h1 {
+    color: #f37c31;
 }
 
 .ms-btn {

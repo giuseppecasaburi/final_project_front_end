@@ -54,8 +54,6 @@ function HomePage() {
                             <img src="/img/hero_turman.jpg" className="d-block w-100" alt="/img/hero_harry_p" />
                         </div>
                     </div>
-
-
                 </div>
                 {/* Overlay per rendere leggibile il testo */}
                 <div
