@@ -1,8 +1,10 @@
 import Select from 'react-select';
 
-function CustomSelectDirector({ optionsData = [], onChange, placeholder = "Seleziona persone", value }) {
+function CustomSelectDirector({ optionsData = [], onChange, placeholder = "Seleziona opzioni", value }) {
+
+  // Mappatura dati in formato accettato da react-select
   const options = optionsData.map(person => ({
-    value: person.id,  // puoi personalizzare la value
+    value: person.id,
     label: `${person.name} ${person.surname}`
   }));
 

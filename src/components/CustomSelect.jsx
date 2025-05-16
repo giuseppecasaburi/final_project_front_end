@@ -1,7 +1,7 @@
-// MultiSelect.jsx
 import Select from 'react-select';
 
 function CustomSelect({ optionsData = [], onChange, placeholder = "Seleziona opzioni", value }) {
+
   // Mappatura dati in formato accettato da react-select
   const options = optionsData.map(item => ({
     value: item.id,
