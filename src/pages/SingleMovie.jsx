@@ -5,23 +5,45 @@ import Loader from "../components/AppLoader";
 
 function SingleMovie() {
     const { id } = useParams();
-    const [movie, setMovie] = useState()
+    const [movie, setMovie] = useState();
+    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getMovie()
-    }, [])
+    }, []);
 
     const getMovie = () => {
         axios.get(`http://localhost:8000/api/movies/${id}`).then((resp) => {
             setMovie(resp.data.data);
             setLoading(false)
-        })
-    }
+        }).catch((error) => {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    console.log("Film non trovato");
+                    setError("Film non trovato")
+                } else if (error.response.status === 500) {
+                    console.log("Errore del server");
+                    setError("Errore del server");
+                } else {
+                    console.log("Errore generico");
+                    setError("Errore generico");
+                }
+            } else if (error.request) {
+                // Nessuna risposta dal server
+                console.error("Nessuna risposta dal server.");
+                setError("Nessuna risposta dal server.");
+            } else {
+                // Altro tipo di errore (es. errore nella configurazione)
+                console.error("Errore nella richiesta:", error.message);
+                setError("Errore nella richiesta.");
+            }
+        });
+    };
 
     const renderStars = (vote) => {
         const fullStars = Math.ceil(vote);
-        const emptyStars = 5 - fullStars;
+        const emptyStars = 10 - fullStars;
         const stars = [];
         for (let i = 0; i < fullStars; i++) {
             stars.push(<i key={`full-${i}`} className="fa-solid text-warning fa-star"></i>);
@@ -30,6 +52,43 @@ function SingleMovie() {
             stars.push(<i key={`empty-${i}`} className="fa-regular text-warning fa-star"></i>);
         }
         return stars;
+    };
+
+    if (error) {
+        return (
+            <div
+                className="modal fade show"
+                style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
+                tabIndex="-1"
+                role="dialog"
+            >
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header bg-danger text-white">
+                            <h3 className="modal-title">Errore</h3>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                onClick={() => setError(null)}
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <h4>{error}</h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={() => setError(null)}
+                            >
+                                Chiudi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     };
 
     return (
@@ -43,8 +102,8 @@ function SingleMovie() {
                         {/* HEADER */}
                         <div
                             className="header-content d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center my-3">
-                            <h2 className="mb-2 mb-lg-0">{movie.title}</h2>
-                            <p className="mb-0 fs-5"><strong>Voto:</strong> {renderStars(movie.vote)} {movie.vote}/5</p>
+                            <h2 className="mb-2 mb-lg-0"><strong>{movie.title}</strong></h2>
+                            <p className="mb-0 fs-5"><strong>Voto:</strong> {renderStars(movie.vote)} {movie.vote}/10</p>
                         </div>
 
                         {/* BODY */}
@@ -77,7 +136,7 @@ function SingleMovie() {
 
                                 {/* REGISTA */}
                                 {movie.director != null ? (
-                                    <h5 className="mb-3"><strong>Regista: </strong>{movie.director["name"]} {movie.director["surname"]}</h5>
+                                    <Link to={`/directors/${movie.director["id"]}`} className="ms-a"><h5><strong>Regista: </strong>{movie.director["name"]} {movie.director["surname"]}</h5></Link>
                                 ) : (
                                     <h5 className="mb-3">Nessun regista collegato</h5>
                                 )}
@@ -99,7 +158,7 @@ function SingleMovie() {
                         <div className="body-review mt-4">
                             <div className="d-flex justify-content-between align-items-lg-center flex-column flex-lg-row">
                                 <h5><strong>Recensione</strong></h5>
-                                <p className="mb-0"><strong>Voto:</strong> {renderStars(movie.vote)} {movie.vote}/5</p>
+                                <p className="mb-0"><strong>Voto:</strong> {renderStars(movie.vote)} {movie.vote}/10</p>
                             </div>
                             {movie.review ? (
                                 <p>{movie.review}</p>

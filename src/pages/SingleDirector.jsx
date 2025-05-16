@@ -6,19 +6,41 @@ import Loader from "../components/AppLoader";
 
 function SingleDirector() {
     const { id } = useParams();
-    const [director, setDirector] = useState()
+    const [director, setDirector] = useState();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         getDirector()
-    }, [])
+    }, []);
 
     const getDirector = () => {
         axios.get(`http://localhost:8000/api/directors/${id}`).then((resp) => {
             setDirector(resp.data.data);
             setLoading(false)
-        })
-    }
+        }).catch((error) => {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    console.log("Regista non trovato");
+                    setError("Regista non trovato")
+                } else if (error.response.status === 500) {
+                    console.log("Errore del server");
+                    setError("Errore del server");
+                } else {
+                    console.log("Errore generico");
+                    setError("Errore generico");
+                }
+            } else if (error.request) {
+                // Nessuna risposta dal server
+                console.error("Nessuna risposta dal server.");
+                setError("Nessuna risposta dal server.");
+            } else {
+                // Altro tipo di errore (es. errore nella configurazione)
+                console.error("Errore nella richiesta:", error.message);
+                setError("Errore nella richiesta.");
+            }
+        });
+    };
 
     const renderStars = (vote) => {
         const fullStars = Math.ceil(vote);
@@ -31,6 +53,43 @@ function SingleDirector() {
             stars.push(<i key={`empty-${i}`} className="fa-regular text-warning fa-star"></i>);
         }
         return stars;
+    };
+
+    if (error) {
+        return (
+            <div
+                className="modal fade show"
+                style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
+                tabIndex="-1"
+                role="dialog"
+            >
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header bg-danger text-white">
+                            <h3 className="modal-title">Errore</h3>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                onClick={() => setError(null)}
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <h4>{error}</h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={() => setError(null)}
+                            >
+                                Chiudi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     };
 
     return (
@@ -82,8 +141,8 @@ function SingleDirector() {
                             <div className="row row-cols-1 row-cols-md-3 g-4">
                                 {director.movies.length > 0 ? (
                                     director.movies.map((movie, index) => (
-                                        <div className="col">
-                                            <CardMovie index={index} movie={movie} />
+                                        <div key={index} className="col">
+                                            <CardMovie movie={movie} />
                                         </div>
                                     ))
                                 ) : (

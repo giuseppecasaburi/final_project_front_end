@@ -8,6 +8,7 @@ function DirectorPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const getDirectors = (page = 1) => {
         axios.get(`http://127.0.0.1:8000/api/directors?page=${currentPage}`).then((resp) => {
@@ -15,17 +16,75 @@ function DirectorPage() {
             setCurrentPage(resp.data.data.current_page)
             setLastPage(resp.data.data.last_page)
             setLoading(false)
-        })
-    }
+        }).catch((error) => {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    console.log("Registi non trovati");
+                    setError("Registi non trovati")
+                } else if (error.response.status === 500) {
+                    console.log("Errore del server");
+                    setError("Errore del server");
+                } else {
+                    console.log("Errore generico");
+                    setError("Errore generico");
+                }
+            } else if (error.request) {
+                // Nessuna risposta dal server
+                console.error("Nessuna risposta dal server.");
+                setError("Nessuna risposta dal server.");
+            } else {
+                // Altro tipo di errore (es. errore nella configurazione)
+                console.error("Errore nella richiesta:", error.message);
+                setError("Errore nella richiesta.");
+            }
+        });
+    };
 
     useEffect(() => {
         getDirectors()
-    }, [currentPage])
+    }, [currentPage]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
         window.scrollTo({ top: 0, behavior: "smooth" })
-    }
+    };
+
+    if (error) {
+        return (
+            <div
+                className="modal fade show"
+                style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
+                tabIndex="-1"
+                role="dialog"
+            >
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header bg-danger text-white">
+                            <h3 className="modal-title">Errore</h3>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                onClick={() => setError(null)}
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <h4>{error}</h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={() => setError(null)}
+                            >
+                                Chiudi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    };
 
     return (
         <div className="container my-3">
@@ -34,15 +93,13 @@ function DirectorPage() {
                 <Loader />
             ) : (
                 <>
-
                     <div className="row row-cols-1 row-cols-lg-3 g-4">
                         {directors.map((director, index) => (
-                            <>
-                                <div className="col">
-                                    <div key={index} className="card h-100 d-flex flex-column">
+                                <div key={index} className="col">
+                                    <div className="card h-100 d-flex flex-column">
                                         {director.image != null ? (
                                             <img src={`http://localhost:8000/storage/${director.image}`} className="card-img-top" alt={`Immagine di ${director.name} ${director.surname}`}
-                                                style={{ objectFit: "cover", objectPosition: "top", height: "300px" }} />
+                                                style={{ objectFit: "cover", height: "300px" }} />
                                         ) : (
                                             <div style={{ border: "2px solid #ffa500", height: "300px", color: "#ffa500" }} className="justify-content-center d-flex align-items-center">Nessuna immagine collegata</div>
 
@@ -50,13 +107,12 @@ function DirectorPage() {
 
                                         <div className="card-body d-flex flex-column">
                                             <h5 className="card-title">{director.name} {director.surname}</h5>
-                                            <p className="card-text">Nato il: {director.date_of_birth}</p>
-                                            <span>Nazionalità {director.nationality}</span><br />
+                                            <p className="card-text"><strong>Nato il:</strong> {director.date_of_birth}</p>
+                                            <span><strong>Nazionalità:</strong> {director.nationality}</span><br />
                                             <Link to={`/directors/${director.id}`} className="btn btn-warning mt-auto">Visualizza Regista</Link>
                                         </div>
                                     </div>
                                 </div>
-                            </>
                         ))}
                     </div>
                     <div className="d-flex flex-column flex-sm-row justify-content-center gap-2 my-5">
