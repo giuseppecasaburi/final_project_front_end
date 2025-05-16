@@ -42,7 +42,7 @@ function AppFooter() {
                             <li className="nav-item" key={index}>
                                 <NavLink
                                     className={({ isActive }) =>
-                                        isActive ? "nav-link active text-warning" : "nav-link"
+                                        isActive ? "nav-link active" : "nav-link"
                                     }
                                     to={link.path}
                                     aria-current="page"

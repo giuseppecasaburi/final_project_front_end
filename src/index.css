@@ -1,13 +1,26 @@
-/* #1c1c1c #00e0c6 #f4f4f4 #475569 #0077b6 #ffb347 #e8e8e8 */
+/* #1c1c1c #00e0c6 #f4f4f4 #475569 #0077b6 #ffb347 #e8e8e8  #216575 */
 /* Nav e Footer */
 nav,
-footer {
-    background-color: #00e0c6;
+footer,
+.filter {
+    background-color: #216575;
+    color: white;
 }
 
-.nav-link:active,
 .nav-link:hover {
     color: #ffa500;
+}
+
+.ms-a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.4rem;
+    transition: 0.3s ease-in-out;
+}
+
+.ms-a:hover {
+    color: #ffa500;
+    transition: 0.3s ease-in-out;
 }
 
 .nav-item a {
@@ -23,8 +36,23 @@ footer {
     transition: 0.3s ease-in-out;
 }
 
-.nav-item .active {
-    color: #ffa500;
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.show,
+.nav-item .nav-link.active {
+    color: #f37c31;
+}
+
+.navbar-toggler {
+    background-color: #f37c31;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem #f37c31;
+}
+
+.btn-warning {
+    background-color: #f37c31;
+    border-color: #f37c31;
 }
 
 footer {
@@ -34,7 +62,7 @@ footer {
 #footer-div {
     width: 90%;
     margin: 20px auto;
-    border-top: 2px solid #ffa500;
+    border-top: 2px solid #f37c31;
 }
 
 #footer-div div {
@@ -114,19 +142,15 @@ body {
 }
 
 .form-control {
-    border: var(--bs-border-width) solid #ffa500;
+    border: var(--bs-border-width) solid #f37c31;
 }
 
 .form-control:focus {
-    border-color: #ffa500;
-    box-shadow: 0 0 0 .25rem #ffa500;
+    border-color: #f37c31;
+    box-shadow: 0 0 0 .25rem #f37c31;
 }
 
 /* SearchPage */
-.filter {
-    background-color: #00e0c6;
-}
-
 .content {
     width: 80%;
 }
