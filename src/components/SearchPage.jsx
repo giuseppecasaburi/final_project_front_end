@@ -332,7 +332,7 @@ function SearchPage() {
                                 {resultsMovies.length > 0 && moviesPage < moviesLastPage && (
                                     <div className="text-center mt-3">
                                         <button
-                                            className="btn btn-outline-warning"
+                                            className="btn btn-warning"
                                             onClick={handleLoadMoreMovies}
                                             disabled={loading}
                                         >
@@ -361,7 +361,7 @@ function SearchPage() {
                                 {resultsDirectors.length > 0 && directorsPage < directorsLastPage && (
                                     <div className="text-center mt-3">
                                         <button
-                                            className="btn btn-outline-warning"
+                                            className="btn btn-warning"
                                             onClick={handleLoadMoreDirectors}
                                             disabled={loading}
                                         >

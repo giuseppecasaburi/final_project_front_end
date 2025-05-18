@@ -11,6 +11,15 @@ function CardMovie({ movie, index }) {
             )}
             <div key={index} className="card-body d-flex flex-column">
                 <h5 className="card-title">{movie.title}</h5>
+                <div>
+                    {movie.genres.length > 0 ? (
+                        movie.genres.map((genre) => (
+                            <span key={genre.id} className="rounded-5 p-2 me-1 mb-1 d-inline-block text-white" style={{ backgroundColor: genre.color }}>{genre.name}</span>
+                        ))
+                    ) : (
+                        <p>Nessun genere collegato</p>
+                    )}
+                </div>
                 <p className="card-text">{`${movie?.story || ''}`.split(' ').slice(0, 10).join(' ')}...</p>
                 <Link to={`/movies/${movie.id}`} className="btn btn-warning mt-auto">Visualizza Film</Link>
             </div>

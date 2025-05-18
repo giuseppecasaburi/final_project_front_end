@@ -9,6 +9,7 @@ function HomePage() {
     const [movies, setMovies] = useState([]);
     const [directors, setDirectors] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     // Stato per la ricerca
     const [search, setSearch] = useState("");
@@ -23,7 +24,28 @@ function HomePage() {
         axios.get("http://127.0.0.1:8000/api/movies").then((resp) => {
             setMovies(resp.data.data.data)
             setLoading(false)
-        })
+        }).catch((error) => {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    console.log("Films non trovati");
+                    setError("Films non trovati")
+                } else if (error.response.status === 500) {
+                    console.log("Errore del server");
+                    setError("Errore del server");
+                } else {
+                    console.log("Errore generico");
+                    setError("Errore generico");
+                }
+            } else if (error.request) {
+                // Nessuna risposta dal server
+                console.error("Nessuna risposta dal server.");
+                setError("Nessuna risposta dal server.");
+            } else {
+                // Altro tipo di errore (es. errore nella configurazione)
+                console.error("Errore nella richiesta:", error.message);
+                setError("Errore nella richiesta.");
+            }
+        });
     };
 
     const getDirectors = () => {
@@ -32,12 +54,69 @@ function HomePage() {
             // Mischia casualmente l'array e ne preleva i primi 3 da salvare in directors
             const shuffled = [...directors].sort(() => 0.5 - Math.random());
             setDirectors(shuffled.slice(0, 3));
-
-        })
+        }).catch((error) => {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    console.log("Registi non trovati");
+                    setError("Registi non trovati")
+                } else if (error.response.status === 500) {
+                    console.log("Errore del server");
+                    setError("Errore del server");
+                } else {
+                    console.log("Errore generico");
+                    setError("Errore generico");
+                }
+            } else if (error.request) {
+                // Nessuna risposta dal server
+                console.error("Nessuna risposta dal server.");
+                setError("Nessuna risposta dal server.");
+            } else {
+                // Altro tipo di errore (es. errore nella configurazione)
+                console.error("Errore nella richiesta:", error.message);
+                setError("Errore nella richiesta.");
+            }
+        });
     };
 
     // Filtra tutti i film e restituisce gli ultimi tre aggiunti
     const recentMovies = movies.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
+
+    if (error) {
+        return (
+            <div
+                className="modal fade show"
+                style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
+                tabIndex="-1"
+                role="dialog"
+            >
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header bg-danger text-white">
+                            <h3 className="modal-title">Errore</h3>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                onClick={() => setError(null)}
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <h4>{error}</h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={() => setError(null)}
+                            >
+                                Chiudi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    };
 
     return (
         <main>

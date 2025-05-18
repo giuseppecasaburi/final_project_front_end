@@ -169,7 +169,7 @@ function SingleMovie() {
 
                         {/* LINK TORNA ALLA HOME */}
                         <div className="mt-3">
-                            <Link to={"/movies"} className="btn btn-outline-secondary w-sm-auto">Torna alla Home</Link>
+                            <Link to={"/movies"} className="btn btn-outline-secondary w-sm-auto">Torna al catalogo</Link>
                         </div>
                     </>
                 )}
