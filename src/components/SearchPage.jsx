@@ -8,6 +8,7 @@ import CustomSelectDirector from "./CustomSelectDirector";
 import Loader from "./AppLoader";
 
 const apiUrl = import.meta.env.VITE_URL_API;
+const apiStorage = import.meta.env.VITE_URL_STORAGE;
 
 function SearchPage() {
     // Prelievo dei parametri dalla ricerca e navigazione programmatica
@@ -325,7 +326,7 @@ function SearchPage() {
                                     {resultsMovies.length > 0 ? (
                                         resultsMovies.map((m, i) => (
                                             <div className="col-md-4 mb-3" key={`movie-${m.id}`}>
-                                                <CardMovie movie={m} index={i} />
+                                                <CardMovie url={apiStorage} movie={m} index={i} />
                                             </div>
                                         ))
                                     ) : (
@@ -354,7 +355,7 @@ function SearchPage() {
                                     {resultsDirectors.length > 0 ? (
                                         resultsDirectors.map((d, i) => (
                                             <div className="col-md-4 mb-3" key={`director-${d.id}`}>
-                                                <CardDirector director={d} index={i} />
+                                                <CardDirector url={apiStorage} director={d} index={i} />
                                             </div>
                                         ))
                                     ) : (

@@ -145,7 +145,7 @@ function SingleDirector() {
                                 {director.movies.length > 0 ? (
                                     director.movies.map((movie, index) => (
                                         <div key={index} className="col">
-                                            <CardMovie movie={movie} />
+                                            <CardMovie url={apiStorage} movie={movie} />
                                         </div>
                                     ))
                                 ) : (
