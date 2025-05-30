@@ -7,6 +7,8 @@ import CustomSelect from "./CustomSelect";
 import CustomSelectDirector from "./CustomSelectDirector";
 import Loader from "./AppLoader";
 
+const apiUrl = import.meta.env.VITE_URL_API;
+
 function SearchPage() {
     // Prelievo dei parametri dalla ricerca e navigazione programmatica
     const [searchParams, setSearchParams] = useSearchParams();
@@ -34,7 +36,7 @@ function SearchPage() {
     const [resultsDirectors, setResultsDirectors] = useState([]);
     const [totalMovies, setTotalMovies] = useState(0);
     const [totalDirectors, setTotalDirectors] = useState(0);
-    
+
     // Stati per i filtri
     const [genres, setGenres] = useState([]);
     const [directors, setDirectors] = useState([]);
@@ -44,15 +46,16 @@ function SearchPage() {
 
     // Carica generi e registi all'avvio
     useEffect(() => {
-        axios.get("http://localhost:8000/api/genres").then(r => setGenres(r.data.data));
-        axios.get("http://localhost:8000/api/select_directors").then(r => setDirectors(r.data.data));
+        axios.get(`${apiUrl}/genres`).then(r => setGenres(r.data.data));
+        axios.get(`${apiUrl}/select_directors`).then(r => setDirectors(r.data.data));
+        
     }, []);
 
     // Funzione per chiamare l'API search con params correnti
     const fetchSearch = useCallback(async (params) => {
         setLoading(true);
         try {
-            const resp = await axios.get("http://localhost:8000/api/search", {
+            const resp = await axios.get(`${apiUrl}/search`, {
                 params: params
             });
 

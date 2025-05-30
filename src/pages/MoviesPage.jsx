@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import Loader from "../components/AppLoader";
 import { span } from "framer-motion/client";
 
+const apiUrlNumeri = import.meta.env.VITE_URL_NUMERI;
+const apiStorage = import.meta.env.VITE_URL_STORAGE;
+
 function MoviePage() {
     const [movies, setMovies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -12,7 +15,7 @@ function MoviePage() {
     const [error, setError] = useState(null);
 
     const getMovies = (page = 1) => {
-        axios.get(`http://127.0.0.1:8000/api/movies?page=${currentPage}`).then((resp) => {
+        axios.get(`${apiUrlNumeri}/movies?page=${currentPage}`).then((resp) => {
             setMovies(resp.data.data.data)
             setCurrentPage(resp.data.data.current_page)
             setLastPage(resp.data.data.last_page)
@@ -113,7 +116,7 @@ function MoviePage() {
                             <div key={index}  className="col">
                                 <div className="card h-100 d-flex flex-column">
                                     {movie.image != null ? (
-                                        <img src={`http://localhost:8000/storage/${movie.image}`} className="card-img-top" alt={`Copertina del Film ${movie.title}`}
+                                        <img src={`${apiStorage}/${movie.image}`} className="card-img-top" alt={`Copertina del Film ${movie.title}`}
                                             style={{ objectFit: "cover", objectPosition: "top", height: "300px" }} />
                                     ) : (
                                         <div style={{ border: "2px solid #ffa500", height: "300px", color: "#ffa500" }} className="justify-content-center d-flex align-items-center">Nessuna immagine collegata</div>

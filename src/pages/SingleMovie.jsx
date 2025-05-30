@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import Loader from "../components/AppLoader";
 
+const apiUrl = import.meta.env.VITE_URL_API;
+const apiStorage = import.meta.env.VITE_URL_STORAGE;
+
 function SingleMovie() {
     const { id } = useParams();
     const [movie, setMovie] = useState();
@@ -14,7 +17,7 @@ function SingleMovie() {
     }, []);
 
     const getMovie = () => {
-        axios.get(`http://localhost:8000/api/movies/${id}`).then((resp) => {
+        axios.get(`${apiUrl}/movies/${id}`).then((resp) => {
             setMovie(resp.data.data);
             setLoading(false)
         }).catch((error) => {
@@ -111,7 +114,7 @@ function SingleMovie() {
                             {/* IMMAGINE */}
                             <div className="image-content w-80 mb-3 mb-lg-0">
                                 {movie.image != null ? (
-                                    <img src={`http://localhost:8000/storage/${movie.image}`} alt={`Copertina del Film ${movie.title}`} className="img-fluid h-100 rounded" />
+                                    <img src={`${apiStorage}/${movie.image}`} alt={`Copertina del Film ${movie.title}`} className="img-fluid h-100 rounded" />
 
                                 ) : (
                                     <div className="d-flex justify-content-center align-items-center h-100">Nessuna immagine collegata</div>

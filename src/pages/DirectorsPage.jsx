@@ -3,6 +3,9 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import Loader from "../components/AppLoader";
 
+const apiUrlNumeri = import.meta.env.VITE_URL_NUMERI;
+const apiStorage = import.meta.env.VITE_URL_STORAGE;
+
 function DirectorPage() {
     const [directors, setDirectors] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -11,7 +14,7 @@ function DirectorPage() {
     const [error, setError] = useState(null);
 
     const getDirectors = (page = 1) => {
-        axios.get(`http://127.0.0.1:8000/api/directors?page=${currentPage}`).then((resp) => {
+        axios.get(`${apiUrlNumeri}/directors?page=${currentPage}`).then((resp) => {
             setDirectors(resp.data.data.data)
             setCurrentPage(resp.data.data.current_page)
             setLastPage(resp.data.data.last_page)
@@ -98,7 +101,7 @@ function DirectorPage() {
                                 <div key={index} className="col">
                                     <div className="card h-100 d-flex flex-column">
                                         {director.image != null ? (
-                                            <img src={`http://localhost:8000/storage/${director.image}`} className="card-img-top" alt={`Immagine di ${director.name} ${director.surname}`}
+                                            <img src={`${apiStorage}/${director.image}`} className="card-img-top" alt={`Immagine di ${director.name} ${director.surname}`}
                                                 style={{ objectFit: "cover", height: "300px" }} />
                                         ) : (
                                             <div style={{ border: "2px solid #ffa500", height: "300px", color: "#ffa500" }} className="justify-content-center d-flex align-items-center">Nessuna immagine collegata</div>

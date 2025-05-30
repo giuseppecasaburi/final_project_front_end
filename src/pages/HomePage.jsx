@@ -5,7 +5,12 @@ import CardMovie from "../components/CardMovie";
 import CardDirector from "../components/CardDirector";
 import Loader from "../components/AppLoader";
 
+const apiUrlNumeri = import.meta.env.VITE_URL_NUMERI;
+const apiStorage = import.meta.env.VITE_URL_STORAGE;
+
+
 function HomePage() {
+    
     const [movies, setMovies] = useState([]);
     const [directors, setDirectors] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,7 +26,7 @@ function HomePage() {
     }, []);
 
     const getMovies = () => {
-        axios.get("http://127.0.0.1:8000/api/movies").then((resp) => {
+        axios.get(`${apiUrlNumeri}/movies`).then((resp) => {
             setMovies(resp.data.data.data)
             setLoading(false)
         }).catch((error) => {
@@ -49,7 +54,7 @@ function HomePage() {
     };
 
     const getDirectors = () => {
-        axios.get("http://localhost:8000/api/directors").then((resp) => {
+        axios.get(`${apiUrlNumeri}/directors`).then((resp) => {
             const directors = resp.data.data.data;
             // Mischia casualmente l'array e ne preleva i primi 3 da salvare in directors
             const shuffled = [...directors].sort(() => 0.5 - Math.random());
@@ -175,7 +180,7 @@ function HomePage() {
                         <div className="row g-4">
                             {recentMovies.map((movie, index) => (
                                 <div key={index} className="col-12 col-md-4">
-                                    <CardMovie movie={movie} index={index} />
+                                    <CardMovie url={apiStorage} movie={movie} index={index} />
                                 </div>
                             ))}
                         </div>
@@ -186,7 +191,7 @@ function HomePage() {
                         <div className="row g-4">
                             {directors.map((director, index) => (
                                 <div key={index} className="col-12 col-md-4">
-                                    <CardDirector director={director} index={index} />
+                                    <CardDirector url={apiStorage} director={director} index={index} />
                                 </div>
                             ))}
                         </div>

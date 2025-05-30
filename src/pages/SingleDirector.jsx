@@ -10,12 +10,15 @@ function SingleDirector() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const apiUrl = import.meta.env.VITE_URL_API;
+    const apiStorage = import.meta.env.VITE_URL_STORAGE;
+
     useEffect(() => {
         getDirector()
     }, []);
 
     const getDirector = () => {
-        axios.get(`http://localhost:8000/api/directors/${id}`).then((resp) => {
+        axios.get(`${apiUrl}/directors/${id}`).then((resp) => {
             setDirector(resp.data.data);
             setLoading(false)
         }).catch((error) => {
@@ -111,7 +114,7 @@ function SingleDirector() {
                             {/* IMMAGINE */}
                             <div className="image-content w-80 mb-3 mb-lg-0">
                                 {director.image != null ? (
-                                    <img src={`http://localhost:8000/storage/${director.image}`} alt={`Immagine di ${director.name} ${director.surname}`} className="img-fluid h-100 rounded" />
+                                    <img src={`${apiStorage}/${director.image}`} alt={`Immagine di ${director.name} ${director.surname}`} className="img-fluid h-100 rounded" />
 
                                 ) : (
                                     <div classNameName="d-flex justify-content-center align-items-center h-100">Nessuna immagine collegata</div>

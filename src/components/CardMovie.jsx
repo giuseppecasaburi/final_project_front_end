@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom"
 
-function CardMovie({ movie, index }) {
+function CardMovie({ url, movie, index }) {
     return (
         <div key={index} className="card h-100 d-flex flex-column">
             {movie.image != null ? (
-                <img src={`http://localhost:8000/storage/${movie.image}`} className="card-img-top" alt={`Copertina del Film ${movie.title}`} style={{ objectFit: "cover", objectPosition: "top", height: "350px" }} />
+                <img src={`${url}/${movie.image}`} className="card-img-top" alt={`Copertina del Film ${movie.title}`} style={{ objectFit: "cover", objectPosition: "top", height: "350px" }} />
 
             ) : (
                 <div className="d-flex justify-content-center align-items-center" style={{ objectFit: "cover", height: "350px" }}>Nessuna Immagine Collegata</div>
