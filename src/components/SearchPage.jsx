@@ -49,7 +49,7 @@ function SearchPage() {
     useEffect(() => {
         axios.get(`${apiUrl}/genres`).then(r => setGenres(r.data.data));
         axios.get(`${apiUrl}/select_directors`).then(r => setDirectors(r.data.data));
-        
+
     }, []);
 
     // Funzione per chiamare l'API search con params correnti
@@ -166,50 +166,39 @@ function SearchPage() {
 
     // Effetto per rilevare i cambiamenti nell'URL (per le ricerche dall'header)
     useEffect(() => {
+        const currentQuery = getQueryParam();
+        const currentGenres = getGenresParam();
+        const currentDirectors = getDirectorsParam();
+
         if (isInitialMount.current) {
             isInitialMount.current = false;
-            return;
-        }
 
-        // Stiamo controllando i cambiamenti URL
-        isUpdatingFromURL.current = true;
+            // Se al primo mount non ci sono query né filtri, esco senza fetch e tolgo il loader
+            if (!currentQuery && currentGenres.length === 0 && currentDirectors.length === 0) {
+                setLoading(false);
+                return;
+            }
 
-        const newQuery = getQueryParam();
-        const newGenres = getGenresParam();
-        const newDirectors = getDirectorsParam();
-
-        // Aggiorna gli stati con i nuovi valori dall'URL
-        setQuery(newQuery);
-        setSelectedGenres(newGenres);
-        setSelectedDirectors(newDirectors);
-
-        // Resetta paginazione
-        setMoviesPage(1);
-        setDirectorsPage(1);
-
-        // Esegui la ricerca con i nuovi parametri
-        if (newQuery || newGenres.length > 0 || newDirectors.length > 0) {
+            // Se invece al primo mount ci sono parametri nell'URL, lancio subito la ricerca
             fetchSearch({
-                query_search: newQuery,
-                genres: newGenres.length ? newGenres : undefined,
-                directors: newDirectors.length ? newDirectors : undefined,
+                query_search: currentQuery,
+                genres: currentGenres.length ? currentGenres : undefined,
+                directors: currentDirectors.length ? currentDirectors : undefined,
                 moviesPage: 1,
                 directorsPage: 1
             });
-        } else {
-            // Nessun parametro di ricerca, pulisci i risultati
-            setResultsMovies([]);
-            setResultsDirectors([]);
-            setTotalMovies(0);
-            setTotalDirectors(0);
-            setLoading(false);
+            return;
         }
 
-        // Fine aggiornamento da URL
-        setTimeout(() => {
-            isUpdatingFromURL.current = false;
-        }, 0);
-
+        // Nei mount successivi (quando location.search cambia), lancio sempre la fetch
+        setLoading(true);
+        fetchSearch({
+            query_search: currentQuery,
+            genres: currentGenres.length ? currentGenres : undefined,
+            directors: currentDirectors.length ? currentDirectors : undefined,
+            moviesPage: 1,
+            directorsPage: 1
+        });
     }, [location.search, fetchSearch]);
 
     // Aggiorna l'URL quando gli stati cambiano (ma solo se non stiamo aggiornando da URL)
