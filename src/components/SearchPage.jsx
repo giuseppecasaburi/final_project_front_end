@@ -173,31 +173,46 @@ function SearchPage() {
         if (isInitialMount.current) {
             isInitialMount.current = false;
 
-            // Se al primo mount non ci sono query né filtri, esco senza fetch e tolgo il loader
+            // Se al primo mount non ci sono parametri, tolgo il loader e non faccio fetch
             if (!currentQuery && currentGenres.length === 0 && currentDirectors.length === 0) {
                 setLoading(false);
                 return;
             }
 
-            // Se invece al primo mount ci sono parametri nell'URL, lancio subito la ricerca
+            // Al primo mount, se c’è almeno un parametro, segno "sto aggiornando da URL"
+            isUpdatingFromURL.current = true;
+
+            // Aggiorno stati da URL e lancio la fetch
+            setQuery(currentQuery);
+            setSelectedGenres(currentGenres);
+            setSelectedDirectors(currentDirectors);
             fetchSearch({
                 query_search: currentQuery,
                 genres: currentGenres.length ? currentGenres : undefined,
                 directors: currentDirectors.length ? currentDirectors : undefined,
                 moviesPage: 1,
-                directorsPage: 1
+                directorsPage: 1,
+            }).finally(() => {
+                isUpdatingFromURL.current = false;
             });
             return;
         }
 
-        // Nei mount successivi (quando location.search cambia), lancio sempre la fetch
-        setLoading(true);
+        // Nei mount successivi (quando cambia location.search)
+        isUpdatingFromURL.current = true;
+        setQuery(currentQuery);
+        setSelectedGenres(currentGenres);
+        setSelectedDirectors(currentDirectors);
+        setMoviesPage(1);
+        setDirectorsPage(1);
         fetchSearch({
             query_search: currentQuery,
             genres: currentGenres.length ? currentGenres : undefined,
             directors: currentDirectors.length ? currentDirectors : undefined,
             moviesPage: 1,
-            directorsPage: 1
+            directorsPage: 1,
+        }).finally(() => {
+            isUpdatingFromURL.current = false;
         });
     }, [location.search, fetchSearch]);
 
